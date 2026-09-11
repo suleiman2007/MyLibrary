@@ -46,9 +46,9 @@ struct EditBook: View {
                                 .foregroundStyle(.red)
                                 .frame(width: 45, height: 45)
                         }
-                        .alert("Supprimer le livre", isPresented: $showDeleteAlert) {
-                            Button("Annuler", role: .cancel) {}
-                            Button("Supprimer", role: .destructive) {
+                        .alert("Delete the book", isPresented: $showDeleteAlert) {
+                            Button("Cancel", role: .cancel) {}
+                            Button("Delete", role: .destructive) {
                                 modelContext.delete(book)
                                 showMainPage = true
                             }
@@ -68,10 +68,10 @@ struct EditBook: View {
                     HStack {
                         Menu {
                             Button { showFileImporter = true } label: {
-                                Label("Chercher dans Fichiers", systemImage: "folder")
+                                Label("Search in files", systemImage: "folder")
                             }
                             Button { showPhotoPicker = true } label: {
-                                Label("Chercher dans la galerie", systemImage: "photo")
+                                Label("Search the gallery", systemImage: "photo")
                             }
                         } label: {
                             RoundedRectangle(cornerRadius: 10)
@@ -96,15 +96,15 @@ struct EditBook: View {
                         
                         VStack(spacing: 15) {
                             VStack(alignment: .leading) {
-                                Text("Titre")
+                                Text("Title")
                                     .bold()
-                                TextField("Titre du livre", text: $book.title)
+                                TextField("Title of the book", text: $book.title)
                                     .textFieldStyle(.roundedBorder)
                             }
                             
                             VStack(alignment: .leading) {
-                                Text("Auteur").bold()
-                                TextField("Auteur du livre", text: $book.author)
+                                Text("Author").bold()
+                                TextField("Author of the book", text: $book.author)
                                     .textFieldStyle(.roundedBorder)
                             }
                         }
@@ -113,9 +113,9 @@ struct EditBook: View {
                     
                     // MARK: - Statut
                     Picker("Statut", selection: $book.bookStatus) {
-                        Text("En train de lire")
+                        Text("Reading")
                             .tag(BookStatus.reading)
-                        Text("Déjà lu")
+                        Text("Read")
                             .tag(BookStatus.read)
                         Text("Read list")
                             .tag(BookStatus.toRead)
@@ -127,12 +127,13 @@ struct EditBook: View {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Description")
                             .font(.system(size: 18, weight: .bold))
-                            .padding(8)
+                            .padding()
                         Rectangle()
                             .fill(.gray)
                             .frame(height: 2)
                         TextEditor(text: $book.bookDescription)
                             .frame(height: 100)
+                            .padding()
                     }
                     .overlay(RoundedRectangle(cornerRadius: 15).stroke(.gray, lineWidth: 1))
                     .padding(.top, 10)
@@ -140,9 +141,9 @@ struct EditBook: View {
                     // MARK: - Avis + note (si déjà lu)
                     if book.bookStatus == .read {
                         VStack(alignment: .leading, spacing: 0) {
-                            Text("Mon avis")
+                            Text("My review")
                                 .font(.system(size: 18, weight: .bold))
-                                .padding(8)
+                                .padding()
                             
                             Rectangle()
                                 .fill(.gray)
@@ -150,6 +151,7 @@ struct EditBook: View {
                             
                             TextEditor(text: $book.review)
                                 .frame(height: 100)
+                                .padding()
                         }
                         .overlay(
                             RoundedRectangle(cornerRadius: 15)
@@ -170,7 +172,7 @@ struct EditBook: View {
                                     ? "star.leadinghalf.filled"
                                     : "star"
                                 )
-                                .font(.system(size: 50))
+                                .font(.system(size: 45))
                                 .onTapGesture { location in
                                     
                                     if location.x < 35 {

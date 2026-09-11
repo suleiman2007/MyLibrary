@@ -9,10 +9,11 @@ import SwiftUI
 import SwiftData
 
 @main
-struct MyLibrary: App {
+struct MyLibraryApp: App {
     var body: some Scene {
         WindowGroup {
             MainPage()
+                .preferredColorScheme(.light)
         }
         .modelContainer(for: Book.self)
     }

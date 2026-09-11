@@ -143,21 +143,21 @@ struct AddBook: View {
                     VStack {
                         
                         VStack(alignment: .leading) {
-                            Text("Titre")
+                            Text("Title")
                                 .font(.system(size: 20, weight: .bold))
                             
                             TextField(
-                                "Titre du livre",
+                                "Title of the book",
                                 text: $title
                             )
                         }
                         
                         VStack(alignment: .leading) {
-                            Text("Auteur")
+                            Text("Author")
                                 .font(.system(size: 20, weight: .bold))
                             
                             TextField(
-                                "Auteur du livre",
+                                "Author of the book",
                                 text: $author
                             )
                         }
@@ -174,10 +174,10 @@ struct AddBook: View {
                         selection: $bookStatus
                     ) {
                         
-                        Text("En train de lire")
+                        Text("Reading")
                             .tag(BookStatus.reading)
                         
-                        Text("Déjà lu")
+                        Text("Read")
                             .tag(BookStatus.read)
                         
                         Text("Read list")
@@ -213,7 +213,7 @@ struct AddBook: View {
                     
                     VStack(alignment: .leading, spacing: 0) {
                         
-                        Text("Mon avis")
+                        Text("My review")
                             .font(.system(size: 20, weight: .bold))
                             .padding()
                         
@@ -244,7 +244,7 @@ struct AddBook: View {
                                 ? "star.leadinghalf.filled"
                                 : "star"
                             )
-                            .font(.system(size: 50))
+                            .font(.system(size: 45))
                             .onTapGesture { location in
                                 
                                 if location.x < 35 {

@@ -136,7 +136,7 @@ struct ViewBook: View {
                 if book.bookStatus == .read {
                     VStack(alignment: .leading, spacing: 0) {
                         
-                        Text("Review")
+                        Text("My review")
                             .font(.system(size: 20, weight: .bold))
                             .padding()
                         

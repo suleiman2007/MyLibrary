@@ -45,18 +45,27 @@ struct MainPage: View {
                         
                         // En train de lire
                         VStack(alignment: .leading) {
-                            Text("En train de lire")
-                                .font(.title2)
-                                .bold()
-                                .frame(
-                                    maxWidth: .infinity,
-                                    alignment: .leading
-                                )
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(.gray, lineWidth: 2)
-                                )
+                            
+                            HStack {
+                                Text("Reading")
+                                    .font(.title2)
+                                    .bold()
+                                    .frame(
+                                        maxWidth: .infinity,
+                                        alignment: .init(horizontal: .leading, vertical: .center)
+                                    )
+                                    .padding()
+                                Spacer()
+                                
+                                Text("\(books.filter { book in book.bookStatus == .reading}.count)")
+                                    .padding()
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(.gray, lineWidth: 2)
+                            )
+                            .padding(.bottom, 5)
+                            
                             
                             BookGrid(
                                 books: books.filter { book in
@@ -69,18 +78,27 @@ struct MainPage: View {
                         
                         // Déjà lu
                         VStack(alignment: .leading) {
-                            Text("Déjà lu")
-                                .font(.title2)
-                                .bold()
-                                .frame(
-                                    maxWidth: .infinity,
-                                    alignment: .leading
-                                )
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(.gray, lineWidth: 2)
-                                )
+                            
+                            HStack {
+                                Text("Read")
+                                    .font(.title2)
+                                    .bold()
+                                    .frame(
+                                        maxWidth: .infinity,
+                                        alignment: .init(horizontal: .leading, vertical: .center)
+                                    )
+                                    .padding()
+                                Spacer()
+                                
+                                Text("\(books.filter { book in book.bookStatus == .read}.count)")
+                                    .padding()
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(.gray, lineWidth: 2)
+                            )
+                            .padding(.bottom, 5)
+                            
                             
                             BookGrid(
                                 books: books.filter { book in
@@ -93,18 +111,27 @@ struct MainPage: View {
                         
                         // Read list
                         VStack(alignment: .leading) {
-                            Text("Read list")
-                                .font(.title2)
-                                .bold()
-                                .frame(
-                                    maxWidth: .infinity,
-                                    alignment: .leading
-                                )
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(.gray, lineWidth: 2)
-                                )
+                            
+                            HStack {
+                                Text("Read List")
+                                    .font(.title2)
+                                    .bold()
+                                    .frame(
+                                        maxWidth: .infinity,
+                                        alignment: .init(horizontal: .leading, vertical: .center)
+                                    )
+                                    .padding()
+                                Spacer()
+                                
+                                Text("\(books.filter { book in book.bookStatus == .toRead}.count)")
+                                    .padding()
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(.gray, lineWidth: 2)
+                            )
+                            .padding(.bottom, 10)
+                            
                             
                             BookGrid(
                                 books: books.filter { book in
