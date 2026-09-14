@@ -32,6 +32,7 @@ struct AddBook: View {
     @State private var showPhotoPicker = false
     
     var body: some View {
+        // Pas de NavigationStack ici pour garder la pile globale de MainPage et autoriser le swipe-back
         ScrollView {
             VStack {
                 

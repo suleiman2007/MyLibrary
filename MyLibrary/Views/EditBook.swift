@@ -26,188 +26,186 @@ struct EditBook: View {
     @State private var showMainPage = false
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack {
-                    
-                    // MARK: - En-tête
-                    HStack {
-                        Text("Edit Book")
-                            .font(.system(size: 26))
-                            .bold()
-                        
-                        Spacer()
-                        
-                        Button {
-                            showDeleteAlert = true
-                        } label: {
-                            Image(systemName: "trash.circle.fill")
-                                .font(.system(size: 40))
-                                .foregroundStyle(.red)
-                                .frame(width: 45, height: 45)
-                        }
-                        .alert("Delete the book", isPresented: $showDeleteAlert) {
-                            Button("Cancel", role: .cancel) {}
-                            Button("Delete", role: .destructive) {
-                                modelContext.delete(book)
-                                showMainPage = true
-                            }
-                        }
-                        
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "checkmark.circle.fill")
-                                .font(.system(size: 40))
-                                .foregroundStyle(.black)
-                                .frame(width: 45, height: 45)
-                        }
-                    }
-                    
-                    // MARK: - Image + informations (Titre, Auteur)
-                    HStack {
-                        Menu {
-                            Button { showFileImporter = true } label: {
-                                Label("Search in files", systemImage: "folder")
-                            }
-                            Button { showPhotoPicker = true } label: {
-                                Label("Search the gallery", systemImage: "photo")
-                            }
-                        } label: {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(.black, lineWidth: 1)
-                                .frame(width: 100, height: 150)
-                                .overlay {
-                                    if let imageData = book.image,
-                                       let uiImage = UIImage(data: imageData) {
-                                        Image(uiImage: uiImage)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 100, height: 150)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    } else {
-                                        Image(systemName: "pencil")
-                                            .font(.system(size: 20))
-                                            .foregroundStyle(.black)
-                                    }
-                                }
-                        }
-                        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhoto, matching: .images)
-                        
-                        VStack(spacing: 15) {
-                            VStack(alignment: .leading) {
-                                Text("Title")
-                                    .bold()
-                                TextField("Title of the book", text: $book.title)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-                            
-                            VStack(alignment: .leading) {
-                                Text("Author").bold()
-                                TextField("Author of the book", text: $book.author)
-                                    .textFieldStyle(.roundedBorder)
-                            }
-                        }
-                        Spacer()
-                    }
-                    
-                    // MARK: - Statut
-                    Picker("Statut", selection: $book.bookStatus) {
-                        Text("Reading")
-                            .tag(BookStatus.reading)
-                        Text("Read")
-                            .tag(BookStatus.read)
-                        Text("Read list")
-                            .tag(BookStatus.toRead)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.top, 10)
-                    
-                    // MARK: - Description
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Description")
-                            .font(.system(size: 18, weight: .bold))
-                            .padding()
-                        Rectangle()
-                            .fill(.gray)
-                            .frame(height: 2)
-                        TextEditor(text: $book.bookDescription)
-                            .frame(height: 100)
-                            .padding()
-                    }
-                    .overlay(RoundedRectangle(cornerRadius: 15).stroke(.gray, lineWidth: 1))
-                    .padding(.top, 10)
-                    
-                    // MARK: - Avis + note (si déjà lu)
-                    if book.bookStatus == .read {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("My review")
-                                .font(.system(size: 18, weight: .bold))
-                                .padding()
-                            
-                            Rectangle()
-                                .fill(.gray)
-                                .frame(height: 2)
-                            
-                            TextEditor(text: $book.review)
-                                .frame(height: 100)
-                                .padding()
-                        }
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(.gray, lineWidth: 1)
-                        )
-                        .padding(.top, 10)
-                        
-                        // Étoiles interactives
-                        HStack {
-                            
-                            ForEach(1...5, id: \.self) { star in
-                                
-                                Image(
-                                    systemName:
-                                        book.rating >= Double(star)
-                                    ? "star.fill"
-                                    : book.rating >= Double(star) - 0.5
-                                    ? "star.leadinghalf.filled"
-                                    : "star"
-                                )
-                                .font(.system(size: 45))
-                                .onTapGesture { location in
-                                    
-                                    if location.x < 35 {
-                                        book.rating = Double(star) - 0.5
-                                    } else {
-                                        book.rating = Double(star)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.top, 30)
-                    }
+        ScrollView {
+            VStack {
+                
+                // MARK: - En-tête
+                HStack {
+                    Text("Edit Book")
+                        .font(.system(size: 26))
+                        .bold()
                     
                     Spacer()
                     
-                }
-                .padding()
-                .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.image]) { result in
-                    if case .success(let url) = result {
-                        book.image = try? Data(contentsOf: url)
+                    Button {
+                        showDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash.circle.fill")
+                            .font(.system(size: 40))
+                            .foregroundStyle(.red)
+                            .frame(width: 45, height: 45)
                     }
-                }
-                .onChange(of: selectedPhoto) {
-                    Task {
-                        if let data = try? await selectedPhoto?.loadTransferable(type: Data.self) {
-                            book.image = data
+                    .alert("Delete the book", isPresented: $showDeleteAlert) {
+                        Button("Cancel", role: .cancel) {}
+                        Button("Delete", role: .destructive) {
+                            modelContext.delete(book)
+                            showMainPage = true
                         }
+                    }
+                    
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 40))
+                            .foregroundStyle(.black)
+                            .frame(width: 45, height: 45)
                     }
                 }
                 
-                // MARK: - Navigation vers MainPage
-                .navigationDestination(isPresented: $showMainPage) {
-                    MainPage()
-                        .toolbar(.hidden, for: .navigationBar)
+                // MARK: - Image + informations (Titre, Auteur)
+                HStack {
+                    Menu {
+                        Button { showFileImporter = true } label: {
+                            Label("Search in files", systemImage: "folder")
+                        }
+                        Button { showPhotoPicker = true } label: {
+                            Label("Search the gallery", systemImage: "photo")
+                        }
+                    } label: {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.black, lineWidth: 1)
+                            .frame(width: 100, height: 150)
+                            .overlay {
+                                if let imageData = book.image,
+                                   let uiImage = UIImage(data: imageData) {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 150)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                } else {
+                                    Image(systemName: "pencil")
+                                        .font(.system(size: 20))
+                                        .foregroundStyle(.black)
+                                }
+                            }
+                    }
+                    .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhoto, matching: .images)
+                    
+                    VStack(spacing: 15) {
+                        VStack(alignment: .leading) {
+                            Text("Title")
+                                .bold()
+                            TextField("Title of the book", text: $book.title)
+                                .textFieldStyle(.roundedBorder)
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Author").bold()
+                            TextField("Author of the book", text: $book.author)
+                                .textFieldStyle(.roundedBorder)
+                        }
+                    }
+                    Spacer()
                 }
+                
+                // MARK: - Statut
+                Picker("Statut", selection: $book.bookStatus) {
+                    Text("Reading")
+                        .tag(BookStatus.reading)
+                    Text("Read")
+                        .tag(BookStatus.read)
+                    Text("Read list")
+                        .tag(BookStatus.toRead)
+                }
+                .pickerStyle(.segmented)
+                .padding(.top, 10)
+                
+                // MARK: - Description
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Description")
+                        .font(.system(size: 18, weight: .bold))
+                        .padding()
+                    Rectangle()
+                        .fill(.gray)
+                        .frame(height: 2)
+                    TextEditor(text: $book.bookDescription)
+                        .frame(height: 100)
+                        .padding()
+                }
+                .overlay(RoundedRectangle(cornerRadius: 15).stroke(.gray, lineWidth: 1))
+                .padding(.top, 10)
+                
+                // MARK: - Avis + note (si déjà lu)
+                if book.bookStatus == .read {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("My review")
+                            .font(.system(size: 18, weight: .bold))
+                            .padding()
+                        
+                        Rectangle()
+                            .fill(.gray)
+                            .frame(height: 2)
+                        
+                        TextEditor(text: $book.review)
+                            .frame(height: 100)
+                            .padding()
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(.gray, lineWidth: 1)
+                    )
+                    .padding(.top, 10)
+                    
+                    // Étoiles interactives
+                    HStack {
+                        
+                        ForEach(1...5, id: \.self) { star in
+                            
+                            Image(
+                                systemName:
+                                    book.rating >= Double(star)
+                                ? "star.fill"
+                                : book.rating >= Double(star) - 0.5
+                                ? "star.leadinghalf.filled"
+                                : "star"
+                            )
+                            .font(.system(size: 45))
+                            .onTapGesture { location in
+                                
+                                if location.x < 35 {
+                                    book.rating = Double(star) - 0.5
+                                } else {
+                                    book.rating = Double(star)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.top, 30)
+                }
+                
+                Spacer()
+                
+            }
+            .padding()
+            .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.image]) { result in
+                if case .success(let url) = result {
+                    book.image = try? Data(contentsOf: url)
+                }
+            }
+            .onChange(of: selectedPhoto) {
+                Task {
+                    if let data = try? await selectedPhoto?.loadTransferable(type: Data.self) {
+                        book.image = data
+                    }
+                }
+            }
+            
+            // MARK: - Navigation vers MainPage
+            .navigationDestination(isPresented: $showMainPage) {
+                MainPage()
+                    .toolbar(.hidden, for: .navigationBar)
             }
         }
     }

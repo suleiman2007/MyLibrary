@@ -163,6 +163,17 @@ struct MainPage: View {
     }
 }
 
+// Extension UIKit pour forcer le swipe-back même lorsque la barre de navigation est masquée (.toolbar(.hidden))
+extension UINavigationController: @retroactive UIGestureRecognizerDelegate {
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
+}
 
 // MARK: - Affichage des livres
 
@@ -190,7 +201,7 @@ struct BookGrid: View {
                    let uiImage = UIImage(data: imageData) {
                     
                     Button {
-                        selectedBook = book // Déclenche l'ouverture de ViewBook
+                        selectedBook = book
                     } label: {
                         Image(uiImage: uiImage)
                             .resizable()
@@ -207,7 +218,7 @@ struct BookGrid: View {
                     
                 } else {
                     Button {
-                        selectedBook = book // Déclenche l'ouverture de ViewBook
+                        selectedBook = book
                     } label: {
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(.gray, lineWidth: 1)
